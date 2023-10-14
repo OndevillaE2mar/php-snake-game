@@ -1,0 +1,27 @@
+<?php
+session_start();
+
+$min_number = 1;
+$max_number = 100;
+$attempts = 0;
+
+if (!isset($_SESSION['target_number'])) {
+    $_SESSION['target_number'] = rand($min_number, $max_number);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $attempts++;
+    $guess = (int)$_POST['guess'];
+
+    if ($guess < $min_number || $guess > $max_number) {
+        $message = "Please enter a number between $min_number and $max_number.";
+    } elseif ($guess < $_SESSION['target_number']) {
+        $message = "Try a higher number.";
+    } elseif ($guess > $_SESSION['target_number']) {
+        $message = "Try a lower number.";
+    } else {
+        $message = "Congratulations! You guessed the number in $attempts attempts.";
+        unset($_SESSION['target_number']);
+    }
+}
+?>
